@@ -8,8 +8,10 @@
     "build": "npx next build",
     "start": "npx next start",
     "dev": "npx next dev",
-    "electron": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron main.cjs\"",
-    "electron:prod": "npm run build && electron main.cjs"
+    "electron": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron --no-sandbox main.cjs\"",
+    "electron:prod": "npm run build && electron --no-sandbox main.cjs",
+    "electron:prodWayland": "npm run build && electron --no-sandbox --ozone-platform=wayland main.cjs"
+    
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",

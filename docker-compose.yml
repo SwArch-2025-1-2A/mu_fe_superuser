@@ -1,22 +1,56 @@
+# services:
+#   mu_fe_de:
+#     build:
+#       context: .
+#       args:
+#         UID: ${UID:-1000}
+#         GID: ${GID:-1000}
+
+#     container_name: mu_fe_de
+
+#     # Solo se monta el socket de X11 para soporte gráfico
+#     volumes:
+#       - /tmp/.X11-unix:/tmp/.X11-unix
+
+
+#     environment:
+#       DISPLAY: ${DISPLAY}
+#       #host.docker.internal no es lo que deberia estar ahi, cambiar en el futuro
+#       GRAPHQL_API: http://${mu_ag_HOSTNAME:-host.docker.internal}:${mu_ag_INTERNAL_PORT:-4000}/query
+#       ELECTRON_DISABLE_SANDBOX: "1"
+
+      
+
+#     working_dir: /app
+
+#     user: "${UID:-1000}:${GID:-1000}"
+
+
+
+
 services:
   mu_fe_de:
     build:
       context: .
+      # args:
+      #   UID: ${UID:-1000}
+      #   GID: ${GID:-1000}
+
     container_name: mu_fe_de
 
-    # Solo se monta el socket de X11 para soporte gráfico
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Para X11
+      - ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:/wayland  # Para Wayland (si aplica)
 
     environment:
-      DISPLAY: ${DISPLAY}
-      #host.docker.internal no es lo que deberia estar ahi, cambiar en el futuro
-      GRAPHQL_API: http://${mu_ag_HOSTNAME:-host.docker.internal}:${mu_ag_INTERNAL_PORT:-4000}/query
+      DISPLAY: ${DISPLAY:-}
+      WAYLAND_DISPLAY: ${WAYLAND_DISPLAY:-}
+      XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR:-}
+      QT_QPA_PLATFORM: wayland
       ELECTRON_DISABLE_SANDBOX: "1"
-
+      GRAPHQL_API: http://${mu_ag_HOSTNAME:-host.docker.internal}:${mu_ag_INTERNAL_PORT:-4000}/query
 
     working_dir: /app
+    # user: "${UID:-1000}:${GID:-1000}"
 
-    user: "${UID:-1000}:${GID:-1000}"
 
